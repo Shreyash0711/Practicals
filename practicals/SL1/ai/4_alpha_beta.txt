@@ -1,0 +1,46 @@
+MAX, MIN = 1000, -1000
+
+def minimax(depth, nodeIndex, maximizingPlayer, 
+            values, alpha, beta): 
+
+    # Check if we have reached the depth where leaf nodes are
+    if depth == len(values).bit_length() - 1:  # Calculate depth from values length
+        return values[nodeIndex] 
+
+    if maximizingPlayer: 
+        best = MIN
+        for i in range(2): 
+            val = minimax(depth + 1, nodeIndex * 2 + i, 
+                          False, values, alpha, beta) 
+            best = max(best, val) 
+            alpha = max(alpha, best) 
+
+            if beta <= alpha: 
+                break
+        return best 
+      
+    else:
+        best = MAX
+        for i in range(2): 
+            val = minimax(depth + 1, nodeIndex * 2 + i, 
+                          True, values, alpha, beta) 
+            best = min(best, val) 
+            beta = min(beta, best) 
+
+            if beta <= alpha: 
+                break
+        return best 
+
+if __name__ == "__main__": 
+    n = int(input("Enter the number of leaf nodes (must be a power of 2): "))
+    
+    if n & (n - 1) != 0 or n <= 0:
+        print("Please enter a valid power of 2.")
+    else:
+        print(f"Enter {n} values for the leaf nodes:")
+        values = list(map(int, input().strip().split()))
+
+        if len(values) != n:
+            print(f"You must enter exactly {n} values.")
+        else:
+            print("The optimal value is:", minimax(0, 0, True, values, MIN, MAX))
